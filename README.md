@@ -5,6 +5,7 @@ Mamba programming language on the base of python with some cool features
 - [x] Variables
 - [x] Constants
 - [x] Memory gestion
+- [x] Errors gestion
 - [x] Pointers 
 - [ ] Lists
 - [ ] Basic functions
