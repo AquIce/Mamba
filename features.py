@@ -24,3 +24,7 @@ def get_index(list,value,number=1):
     for i in range(len(list)):
         if list[i] == value:
             return i
+        
+        
+def list_from_char_to_char(list, first_char, second_char):
+    return list[list.index(first_char):list.rindex(second_char)+1]

@@ -36,29 +36,26 @@ def get_list(values):
     '''
     open = False
     listDelOpen = False
-    list = []
+    final = ''
     # Delete the first character if it is a space
     if values[0] == ' ':
         values = values[1:]
     # Remove the start list character ([) and the end list character (])
-    temp = features.remove(features.remove(values,syntax.SYNTAX['list']['start']),syntax.SYNTAX['list']['stop'])
-    # Split in a list of args
-    temp = temp.split(',')
-    for i in temp:
-        # Used to know if a string literal is terminated
+    list = features.list_from_char_to_char(values,syntax.SYNTAX['list']['start'],syntax.SYNTAX['list']['stop'])[1:-1]
+    for i in list:
         if i in ['\'','"']: open = not open
-        # Check if the current argument is a list
         elif i in [syntax.SYNTAX['list']['start'],syntax.SYNTAX['list']['stop']] and not open:
             listDelOpen = not listDelOpen; 
             if i == syntax.SYNTAX['list']['start']: 
-                get_list(i)
-        # Delete the spaces if they are not in a string literal
+                temp = get_list(list).split(',')
+                print(list,temp)
+                list = features.remove(list,temp)
+                print(list)
+                final += temp
         elif i == ' ' and not open: continue
-        # Add i to the list's args list
-        list.append(i)
-        if open: errors.show_error(3)
-        if listDelOpen: errors.show_error(6)
-    print('-'+features.to_string(list,' - ')+'-')
+        final += i
+        
+    return final
 
 def execute(code):
     '''
@@ -67,7 +64,6 @@ def execute(code):
     line = features.to_list(code)
     open = False
     listDelOpen = False
-    is_list = False
     if code == syntax.SYNTAX['end-code-line']:
         return
     elif code == syntax.SYNTAX['pause-code-line']:
@@ -82,7 +78,7 @@ def execute(code):
         temp2 = features.to_string(temp).split('=')[1]
         for i in temp2:
             if i in ['\'','"']: open = not open
-            elif i in [syntax.SYNTAX['list']['start'],syntax.SYNTAX['list']['stop']] and not open: 
+            elif i == syntax.SYNTAX['list']['start'] and not open: 
                 listDelOpen = not listDelOpen; 
                 if i == syntax.SYNTAX['list']['start']: 
                     get_list(temp2)
@@ -104,7 +100,7 @@ def execute(code):
             elif i in [syntax.SYNTAX['list']['start'],syntax.SYNTAX['list']['stop']] and not open:
                 listDelOpen = not listDelOpen; 
                 if i == syntax.SYNTAX['list']['start']: 
-                    get_list(temp2)
+                    print(get_list(temp2))
             elif i == ' ' and not open: continue
             value += i
         if open: errors.show_error(3)
