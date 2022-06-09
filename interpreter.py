@@ -30,7 +30,20 @@ def code_input():
         code.append(temp)
     return code
 
-def get_list(values):
+def get_sliced_list(code:str) -> list:
+    list_level = [0] * len(code)
+    act_level = 0
+    for i in range(len(code)):
+        if code[i] == syntax.SYNTAX['list']['start']: act_level += 1
+        elif code[i] == syntax.SYNTAX['list']['stop']: act_level -= 1
+        list_level[i] = [code[i], act_level]
+
+    return list_level
+
+def get_list(code:str) -> list:
+    levels = get_sliced_list(code)
+
+def if_is_list(values):
     '''
     Return a formated list of values
     '''
@@ -47,7 +60,7 @@ def get_list(values):
         elif i in [syntax.SYNTAX['list']['start'],syntax.SYNTAX['list']['stop']] and not open:
             listDelOpen = not listDelOpen; 
             if i == syntax.SYNTAX['list']['start']: 
-                temp = get_list(list).split(',')
+                temp = if_is_list(list).split(',')
                 print(list,temp)
                 list = features.remove(list,temp)
                 print(list)
@@ -64,6 +77,7 @@ def execute(code):
     line = features.to_list(code)
     open = False
     listDelOpen = False
+    vars = memory.get_varnames()
     if code == syntax.SYNTAX['end-code-line']:
         return
     elif code == syntax.SYNTAX['pause-code-line']:
@@ -81,7 +95,7 @@ def execute(code):
             elif i == syntax.SYNTAX['list']['start'] and not open: 
                 listDelOpen = not listDelOpen; 
                 if i == syntax.SYNTAX['list']['start']: 
-                    get_list(temp2)
+                    if_is_list(temp2)
             elif i == ' ' and not open: continue
             value += i
         if open: errors.show_error(3)
@@ -100,7 +114,7 @@ def execute(code):
             elif i in [syntax.SYNTAX['list']['start'],syntax.SYNTAX['list']['stop']] and not open:
                 listDelOpen = not listDelOpen; 
                 if i == syntax.SYNTAX['list']['start']: 
-                    print(get_list(temp2))
+                    print(if_is_list(temp2))
             elif i == ' ' and not open: continue
             value += i
         if open: errors.show_error(3)
@@ -124,7 +138,11 @@ def execute(code):
         if value in vars:
             addr = memory.get_address(value)
             memory.into_item(name,addr, True,is_pointer=True)
-    vars = memory.get_varnames()
+    elif line.startwith(syntax.SYNTAX['functions']['print']):
+        temp = line[1:-1]
+        if temp in vars:
+            
+
     for i in vars:
         if code.startswith(i):
             if i in memory.DATAS['2']:
@@ -145,5 +163,7 @@ def exec(code):
         if line != '':
             execute(line)
 
+'''
 code = code_input()
 exec(code)
+'''

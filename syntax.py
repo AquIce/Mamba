@@ -21,6 +21,7 @@ SYNTAX = {
             'step':',',
             'stop':')'
         },
+        'in':'  ',
         'print':'print'
     }
 }

@@ -3,28 +3,23 @@
  >>> Useful Python Features
 '''
 
-def remove(string, substring,times=1):
+def remove(string: str, substring: str,times : int = 1) -> str:
     return string.replace(substring,'',times)
 
-def to_list(string):
+def to_list(string:str) -> list:
     list = []
     for i in string:
         list.append(i)
     return list
 
-def to_string(list,separator=''):
+def to_string(list:list,separator=''):
     string = ''
     for i in list:
         string += str(i)
         if i != list[-1]:
             string += separator
     return string
-
-def get_index(list,value,number=1):
-    for i in range(len(list)):
-        if list[i] == value:
-            return i
         
         
-def list_from_char_to_char(list, first_char, second_char):
-    return list[list.index(first_char):list.rindex(second_char)+1]
+def list_from_char_to_char(list:list, first_char:str, second_char:str) -> list:
+    return list[list.index(first_char):to_string(list).rindex(second_char)+1]

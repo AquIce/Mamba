@@ -103,3 +103,6 @@ def clear_memory():
         '3':[], # Pointer addresses
         '4':[], # List addresses
     })
+
+def get_memory_value(name):
+    
